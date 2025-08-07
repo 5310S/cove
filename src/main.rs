@@ -1,11 +1,14 @@
 use std::env;
 use std::error::Error;
+
+
 // Mods
 mod networking {
     pub mod connections {
         pub mod tcp;
     }
 }
+
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -19,6 +22,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     match args[1].as_str() {
         "server" => {
             networking::connections::tcp::main_listener().await?;
+
         }
         "client" => {
             let addr = args
@@ -26,10 +30,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 .cloned()
                 .unwrap_or_else(|| "127.0.0.1:8080".to_string());
             networking::connections::tcp::connect_to_server(&addr).await?;
+
         }
         _ => {
             eprintln!("Invalid mode. Use 'server' or 'client'.");
         }
+
     }
 
     Ok(())
